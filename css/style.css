@@ -1017,9 +1017,6 @@ footer p {
 
 
 
-
-
-
 /* Media Query For Tablet */
 @media only screen and (min-width: 768px) {
 	.cta {
@@ -1144,10 +1141,16 @@ footer p {
 }
 
 /* End Media Query For Tablet */
-
+@media only screen and (max-width: 1200px) {
+	body {
+		overflow-x: hidden;
+	}
+}
 /* Media Query For Desktop */
 @media only screen and (min-width: 1200px) {
-
+	body {
+		overflow-x: hidden;
+	}
 	/* header */
 	header .hamburger {
 		display: none;
