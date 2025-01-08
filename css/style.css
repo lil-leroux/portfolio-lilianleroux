@@ -660,7 +660,9 @@ header .hamburger.active .bar::after {
 	flex-direction: column;
 	border-radius: 15px;
 }
-
+.all-projets{
+	padding: 20px;
+}
 #projets .projet-item {
 	display: flex;
 	align-items: center;
@@ -851,46 +853,33 @@ header .hamburger.active .bar::after {
 
 /* Footer */
 
-footer .footer {
-	min-height: 200px;
-	flex-direction: column;
-	padding-top: 50px;
-	padding-bottom: 10px;
-}
 
-footer h2 {
-	color: white;
-	font-weight: 500;
-	font-size: 1.8rem;
-	letter-spacing: 0.1rem;
-	margin-top: 10px;
-	margin-bottom: 10px;
-}
 
-footer .social-icon {
+
+
+
+
+
+
+/*CONTACT*/
+
+.contact-input {
+    max-width: 454px;
+}
+.contact-form{
 	display: flex;
-	margin-bottom: 30px;
+	align-items: center;
+	width: 100% !important;
+	padding: 20px;
+}
+.contact-button {
+    display: block;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    margin-left: auto;
 }
 
-footer .social-item {
-	height: 50px;
-	width: 50px;
-	margin: 0 5px;
-}
-
-footer .social-item img {
-	filter: grayscale(1);
-	transition: 0.3s ease filter;
-}
-
-footer .social-item:hover img {
-	filter: grayscale(0);
-}
-
-footer p {
-	color: white;
-	font-size: 1.3rem;
-}
 
 /* End Footer */
 
@@ -1018,6 +1007,10 @@ footer p {
 
 
 
+#marge {
+	min-width: 500px;		
+	margin: 55px;
+	}
 
 
 /* Media Query For Tablet */
@@ -1106,6 +1099,7 @@ footer p {
 	#contact .contact {
 		flex-direction: column;
 		padding: 100px 0;
+		gap: 20px;
 		align-items: center;
 		justify-content: center;
 		min-width: 20vh;
@@ -1114,13 +1108,17 @@ footer p {
 	#contact .contact-items {
 		width: 100%;
 		display: flex;
+		gap: 20px;
 		flex-direction: row;
 		justify-content: space-evenly;
 		margin: 0;
 	}
 
+	#marge {
+	width: 100% !important;		
+	}
 	#contact .contact-item {
-		width: 40%;
+		width: 60%;
 		margin: 0;
 		flex-direction: row;
 	}
@@ -1139,6 +1137,7 @@ footer p {
 		text-align: left;
 		padding-left: 20px;
 	}
+
 
 	/* End contact  */
 }
