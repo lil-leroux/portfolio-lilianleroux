@@ -1,5 +1,16 @@
 @import 'https://fonts.googleapis.com/css?family=Montserrat:300, 400, 700&display=swap';
 
+:root {
+	--color1: 18, 113, 255;
+	--color2: 107, 74, 255;
+	--color3: 100, 100, 255;
+	--color4: 50, 160, 220;
+	--color5: 80, 47, 122;
+	--color-interactive: 140, 100, 255;
+	--circle-size: 80%;
+	--blending: hard-light;
+}
+
 * {
 	padding: 0;
 	margin: 0;
@@ -10,8 +21,303 @@
 html {
 	font-size: 10px;
 	font-family: 'Montserrat', sans-serif;
+	overflow-x: hidden;
+
+}
+
+/* ----- Conteneur du fond ----- */
+.background {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #102540;
+	background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.5'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+	animation: animate 30s linear infinite, wave 5s infinite alternate ease-in-out;
+	z-index: -2;
+	/* Derrière tout */
+}
+
+/* ----- Changer la couleur du SVG au passage de la souris ----- */
+.background:hover {
+	background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ff6347' fill-opacity='0.5'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* ----- Effet "wave" plus subtil ----- */
+@keyframes wave {
+	0% {
+		transform: scale(1) rotate(0deg);
+		filter: blur(0px);
+	}
+
+	50% {
+		transform: scale(1.02) rotate(0.5deg);
+		filter: blur(0.3px);
+	}
+
+	100% {
+		transform: scale(1) rotate(0deg);
+		filter: blur(0px);
+	}
+}
+
+/* ----- Animation en diagonale du fond ----- */
+@keyframes animate {
+	from {
+		background-position: 0 0;
+	}
+
+	to {
+		background-position: 500px 500px;
+	}
+}
+
+/* ----- Effet lumineux atténué ----- */
+.luminous-effect {
+	position: absolute;
+	top: -50%;
+	left: -50%;
+	width: 200%;
+	height: 200%;
+	background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 10%, rgba(255, 255, 255, 0) 60%);
+	mix-blend-mode: overlay;
+	animation: luminousMove 8s linear infinite;
+	pointer-events: none;
+	z-index: -1;
+}
+
+@keyframes luminousMove {
+	0% {
+		transform: translate(-50%, -50%) rotate(0deg);
+	}
+
+	100% {
+		transform: translate(50%, 50%) rotate(45deg);
+	}
+}
+
+/* ----- Effet de changement de couleur plus subtil ----- */
+.background::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(55deg, rgba(0, 47, 255, 0.4), rgba(255, 166, 0, 0.08));
+	mix-blend-mode: overlay;
+	animation: colorShift 10s infinite alternate;
+	pointer-events: none;
+}
+
+@keyframes colorShift {
+	0% {
+		opacity: 0.1;
+	}
+
+	100% {
+		opacity: 0.3;
+	}
+}
+
+/* ----- Bord assombri plus léger ----- */
+.background::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.2));
+	pointer-events: none;
+}
+
+/* ----- Supprimer le "wave" du body ----- */
+body {
+	margin: 0;
+	padding: 0;
+	font-family: "Arial", Helvetica, sans-serif;
+	font-size: 12px;
+	position: relative;
+}
+
+@keyframes moveInCircle {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	50% {
+		transform: rotate(180deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes moveVertical {
+	0% {
+		transform: translateY(-50%);
+	}
+
+	50% {
+		transform: translateY(50%);
+	}
+
+	100% {
+		transform: translateY(-50%);
+	}
+}
+
+@keyframes moveHorizontal {
+	0% {
+		transform: translateX(-50%) translateY(-10%);
+	}
+
+	50% {
+		transform: translateX(50%) translateY(10%);
+	}
+
+	100% {
+		transform: translateX(-50%) translateY(-10%);
+	}
+}
+
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Fond animé */
+}
+
+.gradient-bg {
+    position: relative;
+    z-index: -6; /* En dessous du contenu, mais au-dessus de .background */
+}
+
+.luminous-effect {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    z-index: 0; /* Assurez-vous qu'il soit derrière les cercles et les autres effets */
+}
+.gradient-bg {
+	width: 100vw;
+	height: 100vh;
+	position: relative;
+	overflow: hidden;
+	background: linear-gradient(40deg, var(--color-bg1), var(--color-bg2));
+	top: 0;
+	left: 0;
+	z-index: -22;
 
 
+
+
+
+	.gradients-container {
+		filter: url(#goo) blur(40px);
+		width: 100%;
+		height: 100%;
+	}
+
+	.g1 {
+		position: absolute;
+		background: radial-gradient(circle at center, rgba(var(--color1), 0.8) 0, rgba(var(--color1), 0) 50%) no-repeat;
+		mix-blend-mode: var(--blending);
+
+		width: var(--circle-size);
+		height: var(--circle-size);
+		top: calc(50% - var(--circle-size) / 2);
+		left: calc(50% - var(--circle-size) / 2);
+
+		transform-origin: center center;
+		animation: moveVertical 30s ease infinite;
+
+		opacity: 1;
+	}
+
+	.g2 {
+		position: absolute;
+		background: radial-gradient(circle at center, rgba(var(--color2), 0.8) 0, rgba(var(--color2), 0) 50%) no-repeat;
+		mix-blend-mode: var(--blending);
+
+		width: var(--circle-size);
+		height: var(--circle-size);
+		top: calc(50% - var(--circle-size) / 2);
+		left: calc(50% - var(--circle-size) / 2);
+
+		transform-origin: calc(50% - 400px);
+		animation: moveInCircle 20s reverse infinite;
+
+		opacity: 0.7;
+	}
+
+	.g3 {
+		position: absolute;
+		background: radial-gradient(circle at center, rgba(var(--color3), 0.8) 0, rgba(var(--color3), 0) 50%) no-repeat;
+		mix-blend-mode: var(--blending);
+
+		width: var(--circle-size);
+		height: var(--circle-size);
+		top: calc(50% - var(--circle-size) / 2 + 200px);
+		left: calc(50% - var(--circle-size) / 2 - 500px);
+
+		transform-origin: calc(50% + 400px);
+		animation: moveInCircle 40s linear infinite;
+
+		opacity: 0.6;
+	}
+
+	.g4 {
+		position: absolute;
+		background: radial-gradient(circle at center, rgba(var(--color4), 0.8) 0, rgba(var(--color4), 0) 50%) no-repeat;
+		mix-blend-mode: var(--blending);
+
+		width: var(--circle-size);
+		height: var(--circle-size);
+		top: calc(50% - var(--circle-size) / 2);
+		left: calc(50% - var(--circle-size) / 2);
+
+		transform-origin: calc(50% - 200px);
+		animation: moveHorizontal 40s ease infinite;
+
+		opacity: 0.7;
+	}
+
+	.g5 {
+		position: absolute;
+		background: radial-gradient(circle at center, rgba(var(--color5), 0.8) 0, rgba(var(--color5), 0) 50%) no-repeat;
+		mix-blend-mode: var(--blending);
+
+		width: calc(var(--circle-size) * 2);
+		height: calc(var(--circle-size) * 2);
+		top: calc(50% - var(--circle-size));
+		left: calc(50% - var(--circle-size));
+
+		transform-origin: calc(50% - 800px) calc(50% + 200px);
+		animation: moveInCircle 20s ease infinite;
+
+		opacity: 0.7;
+	}
+
+	.interactive {
+		position: absolute;
+		background: radial-gradient(circle at center, rgba(var(--color-interactive), 0.8) 0, rgba(var(--color-interactive), 0) 50%) no-repeat;
+		mix-blend-mode: var(--blending);
+
+		width: 100%;
+		height: 100%;
+		top: -66%;
+		left: -50%;
+
+		opacity: 0.8;
+	}
 }
 
 a {
@@ -453,29 +759,10 @@ header .hamburger.active .bar::after {
 /* End Header section */
 
 /* accueil Section */
-.background {
-	background-image: url("../image/arrier.svg");
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: top center;
-	width: 100%;
-	height: 300%;
-	z-index: -113;
-	top: 1000px;
-}
 
-.background2 {
-	background-image: url("../image/arrier.svg");
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: top center;
-	width: 100%;
-	height: 100%;
-	z-index: -100;
-
-}
 
 .fondsarriere {
+	perspective: 1000px;
 	background-color: rgba(141, 167, 198, 0.2);
 	border-radius: 20px;
 	box-shadow: 20px 20px 40px 3px rgba(0, 0, 0, 0.3);
@@ -576,8 +863,8 @@ header .hamburger.active .bar::after {
 
 #competence .competence-bottom {
 	display: flex;
-	align-items: center;
-	justify-content: center;
+	align-items: flex-start;
+	justify-content: baseline;
 	flex-wrap: wrap;
 	margin-top: 50px;
 }
@@ -586,7 +873,7 @@ header .hamburger.active .bar::after {
 	flex-basis: 80%;
 	display: flex;
 	align-items: flex-start;
-	justify-content: center;
+	justify-content: baseline;
 	flex-direction: column;
 	padding: 30px;
 	border-radius: 10px;
@@ -606,6 +893,21 @@ header .hamburger.active .bar::after {
 	z-index: 1;
 	overflow: hidden;
 
+
+}
+
+.directionicon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+#competence .icon {
+	padding: 3px;
+	flex-direction: row;
+	flex-wrap: wrap;
 }
 
 #competence .competence-item::after {
@@ -639,6 +941,72 @@ header .hamburger.active .bar::after {
 	text-align: left;
 }
 
+
+
+
+@keyframes infiniteLoop {
+	0% {
+		transform: translate3d(0, 0, 0);
+	}
+
+	100% {
+		transform: translate3d(calc(-100px * 10), 0, 0);
+	}
+}
+
+
+.brandsCarousel {
+	max-width: 960px;
+	max-height: 100px;
+	margin: auto;
+	overflow: hidden;
+	position: relative;
+}
+
+.brandsCarousel::before,
+.brandsCarousel::after {
+	content: "";
+	width: 100px;
+	height: 100px;
+	background: linear-gradient(to right, rgba(250, 250, 240, 1) 0%, rgba(250, 250, 240, 0) 100%);
+	position: absolute;
+	z-index: 2;
+}
+
+.brandsCarousel::before {
+	top: 0;
+	left: 0;
+}
+
+.brandsCarousel::after {
+	top: 0;
+	right: 0;
+	transform: rotateZ(180deg);
+}
+
+.carouselTrack {
+	width: calc(100px * 20);
+	animation: infiniteLoop 10s linear infinite;
+	animation-fill-mode: forwards;
+	will-change: transform;
+}
+
+.brandLogo {
+	width: 100px;
+	height: 50px;
+	align-items: center;
+	margin: auto;
+	overflow: hidden;
+}
+
+.brandLogo svg {
+	width: 100px;
+	height: 50px;
+}
+
+
+
+
 /* End competence Section */
 
 /* Projets section */
@@ -659,10 +1027,13 @@ header .hamburger.active .bar::after {
 	justify-content: center;
 	flex-direction: column;
 	border-radius: 15px;
+	
 }
-.all-projets{
+
+.all-projets {
 	padding: 20px;
 }
+
 #projets .projet-item {
 	display: flex;
 	align-items: center;
@@ -687,21 +1058,23 @@ header .hamburger.active .bar::after {
 	-webkit-backdrop-filter: blur(10px);
 	-moz-backdrop-filter: blur(10px);
 	color: white;
+	
 }
 
 #projets .projet-info h1 {
 	font-size: 4rem;
-	font-weight: 500;
+	font-weight: 800;
 }
 
 #projets .projet-info h2 {
 	font-size: 1.8rem;
-	font-weight: 500;
+	font-weight: 600;
 	margin-top: 10px;
 }
 
 #projets .projet-info p {
 	color: white;
+	font-weight: 400;
 }
 
 #projets .projet-img {
@@ -864,20 +1237,22 @@ header .hamburger.active .bar::after {
 /*CONTACT*/
 
 .contact-input {
-    max-width: 454px;
+	max-width: 454px;
 }
-.contact-form{
+
+.contact-form {
 	display: flex;
 	align-items: center;
 	width: 100% !important;
 	padding: 20px;
 }
+
 .contact-button {
-    display: block;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    margin-left: auto;
+	display: block;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	margin-left: auto;
 }
 
 
@@ -1008,9 +1383,9 @@ header .hamburger.active .bar::after {
 
 
 #marge {
-	min-width: 500px;		
+	min-width: 500px;
 	margin: 55px;
-	}
+}
 
 
 /* Media Query For Tablet */
@@ -1022,6 +1397,7 @@ header .hamburger.active .bar::after {
 
 	h1.section-titre {
 		font-size: 6rem;
+		font-weight: 600;
 	}
 
 	/* accueil */
@@ -1048,7 +1424,7 @@ header .hamburger.active .bar::after {
 	#projets .projet-item:nth-child(even) {
 		flex-direction: row-reverse;
 	}
-*/
+   */
 	#projets .projet-item {
 		height: 500px;
 		margin: 0;
@@ -1115,8 +1491,9 @@ header .hamburger.active .bar::after {
 	}
 
 	#marge {
-	width: 100% !important;		
+		width: 100% !important;
 	}
+
 	#contact .contact-item {
 		width: 60%;
 		margin: 0;
@@ -1178,6 +1555,7 @@ header .hamburger.active .bar::after {
 	#competence .competence-bottom .competence-item {
 		flex-basis: 22%;
 		margin: 1.5%;
+		min-height: 621px;
 
 	}
 }
