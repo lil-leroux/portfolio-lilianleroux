@@ -47,4 +47,8 @@ document.querySelectorAll('.cursor').forEach(cursor => {
     elem.addEventListener('mouseenter', () => (onElement = elem))
     elem.addEventListener('mouseleave', () => (onElement = undefined))
   })
+  if (navigator.deviceMemory && navigator.deviceMemory < 4 || window.matchMedia("(max-width: 768px)").matches) {
+    document.querySelectorAll('.cursor').forEach(cursor => cursor.style.display = 'none');
+    return; // Stoppe l'exécution du script
+  }
 })

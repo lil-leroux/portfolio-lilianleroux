@@ -1,3 +1,16 @@
+if (navigator.deviceMemory && navigator.deviceMemory < 4) {
+    document.documentElement.classList.add('low-performance');
+    document.querySelector('.interactive').style.display = 'none';
+}
+let lastTime = 0;
+window.addEventListener('mousemove', (event) => {
+    let now = performance.now();
+    if (now - lastTime < 50) return; // Limite à 20 FPS
+    lastTime = now;
+    
+    tgX = event.clientX;
+    tgY = event.clientY;
+});
 document.addEventListener('DOMContentLoaded', () => {
     const interBubble = document.querySelector('.interactive');
     let curX = 0;
