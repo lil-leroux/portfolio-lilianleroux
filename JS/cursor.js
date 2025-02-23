@@ -43,7 +43,7 @@ document.querySelectorAll('.cursor').forEach(cursor => {
     updateProperties(cursor, state)
   })
 
-  document.querySelectorAll('a, button').forEach(elem => {
+  document.querySelectorAll('a, button,.mousey,.contact-item,.projet-item').forEach(elem => {
     elem.addEventListener('mouseenter', () => (onElement = elem))
     elem.addEventListener('mouseleave', () => (onElement = undefined))
   })
