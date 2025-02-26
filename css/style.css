@@ -1468,6 +1468,7 @@ header .hamburger.active .bar::after {
 	flex-direction: column-reverse;
 	text-align: center;
 	max-width: 1200px;
+	height: 600px;
 	margin: 0 auto;
 	padding: 100px 20px;
 }
@@ -1508,10 +1509,11 @@ header .hamburger.active .bar::after {
 	padding-top: 1;
 	padding-right: 230px;
 	padding-left: 230px;
-	padding-bottom: 100px;
+	padding-bottom: 300px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+
 }
 
 /* End presentation Section */
