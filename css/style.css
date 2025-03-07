@@ -1383,6 +1383,12 @@ header .hamburger.active .bar::after {
 	margin: 230px auto;
 	overflow: hidden;
 	border-radius: 15px;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#projets .projet-item:hover {
+	transform: scale(1.02);
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 #projets .projet-info {
@@ -2089,3 +2095,236 @@ button[type="submit"] {
 button[type="submit"]:hover {
 	background-color: #0062cc;
 }
+
+/* mon parcours Section */
+#parcours .parcours {
+    flex-direction: column;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 100px 0;
+}
+
+#parcours .parcours-header h1 {
+    margin-bottom: 50px;
+}
+
+.timeline {
+    position: relative;
+    padding: 20px 0;
+    list-style: none;
+}
+
+.timeline:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    background: #ffffff;
+    left: 50%;
+    margin-left: -3px; /* Adjusted to center the line */
+	border-radius: 20px;
+}
+
+.timeline-item {
+    margin: 20px 0;
+    position: relative;
+}
+
+.timeline-item:before,
+.timeline-item:after {
+    content: " ";
+    display: table;
+}
+
+.timeline-item:after {
+    clear: both;
+}
+
+.timeline-item .timeline-content {
+    position: relative;
+    width: 45%;
+    padding: 20px;
+    background: rgba(112, 123, 138, 0.436);
+    border-radius: 8px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.timeline-item:nth-child(odd) .timeline-content {
+    left: 0;
+}
+
+.timeline-item:nth-child(even) .timeline-content {
+    left: 55%; /* Adjusted to add spacing */
+}
+
+.timeline-item .timeline-content h2 {
+    margin-top: 0;
+    color: #fff;
+}
+
+.timeline-item .timeline-content p {
+    margin: 0;
+    color: #fff;
+}
+
+.timeline-item .timeline-date {
+    position: absolute;
+    top: -20px;
+    left: 500px;
+    width: 60px;
+    height: 30px;
+    line-height: 30px;
+    background: #102540;
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    font-size: 1.6rem;
+	z-index: 1;
+}
+
+.timeline-item:nth-child(even) .timeline-date {
+    left: auto;
+    right: 500px;
+}
+
+.timeline-item:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    background: #ffffff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
+.timeline-item .dotted-line {
+    position: absolute;
+    top: 50%;
+    width: 5%;
+    height: 2px;
+    background: transparent;
+    border-top: 6px dotted #ffffff;
+    transform: translateY(-50%);
+    z-index: 1; /* Ensure it is behind the content but above the background */
+}
+
+.timeline-item:nth-child(odd) .dotted-line {
+    left: 50%;
+    transform: translateX(-100%) translateY(-50%);
+}
+
+.timeline-item:nth-child(even) .dotted-line {
+    right: 50%;
+    transform: translateX(100%) translateY(-50%);
+}
+
+/* Filter buttons */
+.filter-buttons {
+    text-align: center;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.filter-button {
+    background-color: #667eea;
+    color: white;
+	width: 200px;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.filter-button:hover {
+    background-color: #5a67d8;
+    transform: scale(1.05);
+}
+
+/* Project details popup */
+.project-details-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.project-details-popup.show {
+    opacity: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.project-details-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 800px;
+    width: 90%;
+    max-height: 80%;
+    overflow-y: auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transform: translateY(-50px);
+    transition: transform 0.3s ease;
+}
+
+.project-details-popup.show .project-details-content {
+    transform: translateY(0);
+}
+
+.project-details-content img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px 10px 0 0;
+    margin-bottom: 20px;
+}
+
+.project-details-content h1,
+.project-details-content h2,
+.project-details-content p,
+.project-details-content ul,
+.project-details-content a {
+    margin-bottom: 15px;
+}
+
+.project-details-content ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.close-popup {
+    background-color: #667eea;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s, transform 0.3s;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.close-popup:hover {
+    background-color: #5a67d8;
+    transform: scale(1.05);
+}
+
+/* End Project details popup */

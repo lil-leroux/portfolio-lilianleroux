@@ -31,6 +31,42 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     move();
+
+    // Filter projects by tags
+    const filterButtons = document.querySelectorAll('.filter-button');
+    const projects = document.querySelectorAll('.projet-item');
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const tag = button.getAttribute('data-tag');
+            projects.forEach(project => {
+                if (tag === 'all' || project.classList.contains(tag)) {
+                    project.style.display = 'flex';
+                } else {
+                    project.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Show project details in a popup
+    const projectDetailsPopup = document.querySelector('.project-details-popup');
+    const projectDetailsContent = document.querySelector('.project-details-content');
+    const closePopupButton = document.querySelector('.close-popup');
+
+    projects.forEach(project => {
+        project.addEventListener('click', () => {
+            const details = project.querySelector('.project-details').innerHTML;
+            projectDetailsContent.innerHTML = details;
+            projectDetailsPopup.style.display = 'flex';
+            projectDetailsPopup.classList.add('show');
+        });
+    });
+
+    closePopupButton.addEventListener('click', () => {
+        projectDetailsPopup.style.display = 'none';
+        projectDetailsPopup.classList.remove('show');
+    });
 });
 /* Preloader */
 window.addEventListener("load", function () {
