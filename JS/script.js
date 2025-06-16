@@ -12,6 +12,21 @@ window.addEventListener('mousemove', (event) => {
     tgY = event.clientY;
 });
 document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('img.zoomable').forEach(img => {
+        img.addEventListener('click', () => {
+            const preview = document.getElementById('fullscreen-preview');
+            preview.querySelector('img').src = img.src;
+            preview.style.display = 'flex';
+        });
+    });
+    
+    const fullscreen = document.getElementById('fullscreen-preview');
+    if (fullscreen) {
+        fullscreen.addEventListener('click', () => {
+            fullscreen.style.display = 'none';
+        });
+    }
+    
     const interBubble = document.querySelector('.interactive');
     let curX = 0;
     let curY = 0;
@@ -66,6 +81,66 @@ document.addEventListener('DOMContentLoaded', () => {
     closePopupButton.addEventListener('click', () => {
         projectDetailsPopup.style.display = 'none';
         projectDetailsPopup.classList.remove('show');
+    });
+
+    document.getElementById('full-width-layout').addEventListener('click', function () {
+        const allProjects = document.querySelector('.all-projets');
+        allProjects.classList.remove('grid-layout');
+        allProjects.classList.add('default-layout');
+    });
+
+    document.getElementById('grid-layout').addEventListener('click', function () {
+        const allProjects = document.querySelector('.all-projets');
+        allProjects.classList.remove('default-layout');
+        allProjects.classList.add('grid-layout');
+    });
+
+    const gridButton = document.getElementById('grid-layout');
+    const fullWidthButton = document.getElementById('full-width-layout');
+    const projectsContainer = document.querySelector('.all-projets');
+
+    gridButton.addEventListener('click', () => {
+        projectsContainer.classList.add('grid-layout');
+        projectsContainer.classList.remove('default-layout');
+        // Ensure grid layout styles are applied with higher priority
+        const projectInfos = document.querySelectorAll('.projet-info');
+        projectInfos.forEach(info => {
+            info.style.padding = '15px';
+            info.style.height = 'auto';
+            info.style.display = 'flex';
+            info.style.flexDirection = 'column';
+            info.style.justifyContent = 'center';
+            info.style.alignItems = 'center';
+            info.style.textAlign = 'center';
+        });
+        // Modify image dimensions for grid layout
+        const projectImages = document.querySelectorAll('.projet-img img');
+        projectImages.forEach(img => {
+            img.style.width = '100px';
+            img.style.height = '100px';
+        });
+    });
+
+    fullWidthButton.addEventListener('click', () => {
+        projectsContainer.classList.add('default-layout');
+        projectsContainer.classList.remove('grid-layout');
+        // Reset styles for full-width layout
+        const projectInfos = document.querySelectorAll('.projet-info');
+        projectInfos.forEach(info => {
+            info.style.padding = '';
+            info.style.height = '';
+            info.style.display = '';
+            info.style.flexDirection = '';
+            info.style.justifyContent = '';
+            info.style.alignItems = '';
+            info.style.textAlign = '';
+        });
+        // Reset image dimensions for full-width layout
+        const projectImages = document.querySelectorAll('.projet-img img');
+        projectImages.forEach(img => {
+            img.style.width = '';
+            img.style.height = '';
+        });
     });
 });
 /* Preloader */
