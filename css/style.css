@@ -512,13 +512,21 @@ img {
 	height: 100%;
 }
 
+.auditgds {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 200px !important;
+    height: 200px !important;
+    border-radius: 10px !important;
+    object-fit: cover; /* garde l’image bien remplie sans déformation */
+}
 
 .cta {
 	font-weight: bold;
 	color: white;
 	border-radius: 10px;
-	width: 206px;
-	height: 72.66px;
+
 	border: none;
 	background-image: linear-gradient(to right, #667eea, #764ba2, #6B8DD6, #8E37D7);
 	display: flex;
@@ -1657,7 +1665,8 @@ header .hamburger.active .bar::after {
 .logiciels-logos img:hover {
 	transform: scale(1.1);
 }
-.logiciteltitre{
+
+.logiciteltitre {
 	font-size: 2.5rem;
 	font-weight: 500;
 	margin-bottom: 20px;
@@ -1665,6 +1674,7 @@ header .hamburger.active .bar::after {
 	text-align: center;
 	padding-top: 20px;
 }
+
 /* contact Section */
 #contact .contact {
 	flex-direction: column;
@@ -1935,9 +1945,6 @@ button:focus {
 /* Media Query For Tablet */
 @media only screen and (min-width: 768px) {
 	.cta {
-		font-size: 2.0rem;
-		width: 206px;
-		height: 50px;
 		padding: 10px;
 
 
@@ -2409,6 +2416,50 @@ button[type="submit"]:hover {
 }
 
 /* Project details popup */
+.popup-link-icon .toggle-fullscreen {
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	padding: 6px;
+	border-radius: 8px;
+	transition: transform 0.2s ease;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.popup-link-icon .toggle-fullscreen:hover {
+	transform: scale(1.05);
+}
+
+.popup-link-icon .toggle-fullscreen img {
+	width: 40px;
+	height: 40px;
+}
+
+/* Réinitialisation pour ce bouton spécifique */
+button.toggle-fullscreen {
+	all: unset;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 6px;
+	border-radius: 8px;
+	transition: transform 0.2s ease;
+}
+
+button.toggle-fullscreen img {
+	width: 40px;
+	height: 40px;
+}
+
+/* Animation au survol */
+button.toggle-fullscreen:hover {
+	
+	transform: scale(1.05);
+}
+
 .project-details-popup {
 	position: fixed;
 	top: 0;
@@ -2440,7 +2491,7 @@ button[type="submit"]:hover {
 	overflow-y: auto;
 	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 	transform: translateY(-50px);
-	transition: transform 0.3s ease;
+	transition: transform 0.3s ease, max-width 0.4s ease, width 0.4s ease;
 }
 
 .project-details-popup.show .project-details-content {
@@ -2497,6 +2548,33 @@ button[type="submit"]:hover {
 	color: #333;
 	margin-bottom: 10px;
 }
+
+.project-details-popup {
+	opacity: 0;
+	transform: scale(0.9);
+	transition: opacity 0.4s ease, transform 0.4s ease;
+	pointer-events: none;
+}
+
+.project-details-popup.show {
+	opacity: 1;
+	transform: scale(1);
+	pointer-events: auto;
+}
+
+.project-details-popup {
+	opacity: 0;
+	transform: translateY(30px);
+	transition: opacity 0.4s ease, transform 0.4s ease;
+	pointer-events: none;
+}
+
+.project-details-popup.show {
+	opacity: 1;
+	transform: translateY(0);
+	pointer-events: auto;
+}
+
 
 .close-popup {
 	background-color: #667eea;
@@ -2633,6 +2711,12 @@ button[type="submit"]:hover {
 
 
 
+.project-details-popup.fullscreen .project-details-content {
+	max-width: 95%;
+	max-height: 95%;
+	width: 95%;
+	height: 95%;
+}
 
 
 .project-details {
@@ -2659,7 +2743,6 @@ button[type="submit"]:hover {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 8px;
-	margin-top: 10px;
 }
 
 .badge.cta {
@@ -2671,7 +2754,6 @@ button[type="submit"]:hover {
 	font-size: 1.0rem;
 	padding: 6px 14px;
 	border-radius: 999px;
-	width: 80px;
 	cursor: default;
 	text-align: center;
 	display: inline-block;

@@ -19,14 +19,14 @@ document.addEventListener('DOMContentLoaded', () => {
             preview.style.display = 'flex';
         });
     });
-    
+
     const fullscreen = document.getElementById('fullscreen-preview');
     if (fullscreen) {
         fullscreen.addEventListener('click', () => {
             fullscreen.style.display = 'none';
         });
     }
-    
+
     const interBubble = document.querySelector('.interactive');
     let curX = 0;
     let curY = 0;
@@ -46,6 +46,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     move();
+
+    document.addEventListener('click', function (e) {
+        const btn = e.target.closest('.toggle-fullscreen');
+        if (btn) {
+            projectDetailsPopup.classList.toggle('fullscreen');
+            const img = btn.querySelector('img');
+            if (projectDetailsPopup.classList.contains('fullscreen')) {
+                img.src = "../image/retrecir.png"; // nouvelle icône
+            } else {
+                img.src = "../image/plein-ecran.png"; // retour à l’icône d’origine
+            }
+        }
+    });
+
+
 
     // Filter projects by tags
     const filterButtons = document.querySelectorAll('.filter-button');
@@ -73,30 +88,26 @@ document.addEventListener('DOMContentLoaded', () => {
         project.addEventListener('click', () => {
             const details = project.querySelector('.project-details').innerHTML;
             projectDetailsContent.innerHTML = details;
+
+            // Affiche le popup
             projectDetailsPopup.style.display = 'flex';
-            projectDetailsPopup.classList.add('show');
+
+            // Attend un "tick" pour que display soit pris en compte, puis ajoute .show
+            requestAnimationFrame(() => {
+                projectDetailsPopup.classList.add('show');
+            });
         });
     });
 
+
     closePopupButton.addEventListener('click', () => {
-        projectDetailsPopup.style.display = 'none';
         projectDetailsPopup.classList.remove('show');
+        setTimeout(() => {
+            projectDetailsPopup.style.display = 'none';
+        }, 400); // doit correspondre à la durée CSS
     });
 
-    document.getElementById('full-width-layout').addEventListener('click', function () {
-        const allProjects = document.querySelector('.all-projets');
-        allProjects.classList.remove('grid-layout');
-        allProjects.classList.add('default-layout');
-    });
 
-    document.getElementById('grid-layout').addEventListener('click', function () {
-        const allProjects = document.querySelector('.all-projets');
-        allProjects.classList.remove('default-layout');
-        allProjects.classList.add('grid-layout');
-    });
-
-    const gridButton = document.getElementById('grid-layout');
-    const fullWidthButton = document.getElementById('full-width-layout');
     const projectsContainer = document.querySelector('.all-projets');
 
     gridButton.addEventListener('click', () => {
