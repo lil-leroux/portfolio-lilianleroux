@@ -1,25 +1,23 @@
-if (navigator.deviceMemory && navigator.deviceMemory < 4) {
+// Performance detection
+const isLowPerf = (navigator.deviceMemory && navigator.deviceMemory < 4) ||
+    window.matchMedia('(max-width: 768px)').matches;
+
+if (isLowPerf) {
     document.documentElement.classList.add('low-performance');
-    document.querySelector('.interactive').style.display = 'none';
+    const interactive = document.querySelector('.interactive');
+    if (interactive) interactive.style.display = 'none';
 }
-let lastTime = 0;
-window.addEventListener('mousemove', (event) => {
-    let now = performance.now();
-    if (now - lastTime < 50) return; // Limite à 20 FPS
-    lastTime = now;
 
-    tgX = event.clientX;
-    tgY = event.clientY;
+/* Preloader */
+window.addEventListener("load", function () {
+    setTimeout(function () {
+        document.body.classList.add("loaded");
+    }, 1500);
 });
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('img.zoomable').forEach(img => {
-        img.addEventListener('click', () => {
-            const preview = document.getElementById('fullscreen-preview');
-            preview.querySelector('img').src = img.src;
-            preview.style.display = 'flex';
-        });
-    });
 
+document.addEventListener('DOMContentLoaded', () => {
+
+    // Fullscreen image preview (in static context — inside popup is re-bound separately)
     const fullscreen = document.getElementById('fullscreen-preview');
     if (fullscreen) {
         fullscreen.addEventListener('click', () => {
@@ -27,47 +25,66 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const interBubble = document.querySelector('.interactive');
-    let curX = 0;
-    let curY = 0;
-    let tgX = 0;
-    let tgY = 0;
+    // Interactive bubble animation (only on capable devices)
+    if (!isLowPerf) {
+        const interBubble = document.querySelector('.interactive');
+        if (interBubble) {
+            let curX = 0;
+            let curY = 0;
+            let tgX = 0;
+            let tgY = 0;
+            let lastTime = 0;
 
-    const move = () => {
-        curX += (tgX - curX) / 20;
-        curY += (tgY - curY) / 20;
-        interBubble.style.transform = `translate(${Math.round(curX)}px, ${Math.round(curY)}px)`;
-        requestAnimationFrame(move);
-    };
+            window.addEventListener('mousemove', (event) => {
+                const now = performance.now();
+                if (now - lastTime < 50) return;
+                lastTime = now;
+                tgX = event.clientX;
+                tgY = event.clientY;
+            });
 
-    window.addEventListener('mousemove', (event) => {
-        tgX = event.clientX;
-        tgY = event.clientY;
-    });
+            const move = () => {
+                curX += (tgX - curX) / 20;
+                curY += (tgY - curY) / 20;
+                interBubble.style.transform = `translate(${Math.round(curX)}px, ${Math.round(curY)}px)`;
+                requestAnimationFrame(move);
+            };
+            move();
+        }
+    }
 
-    move();
+    // Popup references
+    const projectDetailsPopup = document.querySelector('.project-details-popup');
+    const projectDetailsContent = document.querySelector('.project-details-content');
+    const closePopupButton = document.querySelector('.close-popup');
 
+    // Toggle fullscreen popup
     document.addEventListener('click', function (e) {
         const btn = e.target.closest('.toggle-fullscreen');
-        if (btn) {
+        if (btn && projectDetailsPopup) {
             projectDetailsPopup.classList.toggle('fullscreen');
             const img = btn.querySelector('img');
-            if (projectDetailsPopup.classList.contains('fullscreen')) {
-                img.src = "../image/retrecir.png"; // nouvelle icône
-            } else {
-                img.src = "../image/plein-ecran.png"; // retour à l’icône d’origine
+            if (img) {
+                img.src = projectDetailsPopup.classList.contains('fullscreen')
+                    ? "image/retrecir.png"
+                    : "image/plein-ecran.png";
             }
         }
     });
-
-
 
     // Filter projects by tags
     const filterButtons = document.querySelectorAll('.filter-button');
     const projects = document.querySelectorAll('.projet-item');
 
+    // Set "Tous" active by default
+    const allButton = document.querySelector('.filter-button[data-tag="all"]');
+    if (allButton) allButton.classList.add('active');
+
     filterButtons.forEach(button => {
         button.addEventListener('click', () => {
+            filterButtons.forEach(b => b.classList.remove('active'));
+            button.classList.add('active');
+
             const tag = button.getAttribute('data-tag');
             projects.forEach(project => {
                 if (tag === 'all' || project.classList.contains(tag)) {
@@ -80,117 +97,103 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Show project details in a popup
-    const projectDetailsPopup = document.querySelector('.project-details-popup');
-    const projectDetailsContent = document.querySelector('.project-details-content');
-    const closePopupButton = document.querySelector('.close-popup');
+    if (projectDetailsPopup && projectDetailsContent && closePopupButton) {
+        const bindZoomable = (container) => {
+            container.querySelectorAll('img.zoomable').forEach(img => {
+                img.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const preview = document.getElementById('fullscreen-preview');
+                    if (preview) {
+                        preview.querySelector('img').src = img.src;
+                        preview.style.display = 'flex';
+                    }
+                });
+            });
+        };
 
-    projects.forEach(project => {
-        project.addEventListener('click', () => {
-            const details = project.querySelector('.project-details').innerHTML;
-            projectDetailsContent.innerHTML = details;
+        projects.forEach(project => {
+            project.addEventListener('click', () => {
+                const details = project.querySelector('.project-details');
+                if (!details) return;
+                projectDetailsContent.innerHTML = details.innerHTML;
+                bindZoomable(projectDetailsContent);
 
-            // Affiche le popup
-            projectDetailsPopup.style.display = 'flex';
-
-            // Attend un "tick" pour que display soit pris en compte, puis ajoute .show
-            requestAnimationFrame(() => {
-                projectDetailsPopup.classList.add('show');
+                projectDetailsPopup.style.display = 'flex';
+                requestAnimationFrame(() => {
+                    projectDetailsPopup.classList.add('show');
+                });
             });
         });
-    });
 
-
-    closePopupButton.addEventListener('click', () => {
-        projectDetailsPopup.classList.remove('show');
-        setTimeout(() => {
-            projectDetailsPopup.style.display = 'none';
-        }, 400); // doit correspondre à la durée CSS
-    });
-
-
-    const projectsContainer = document.querySelector('.all-projets');
-
-    gridButton.addEventListener('click', () => {
-        projectsContainer.classList.add('grid-layout');
-        projectsContainer.classList.remove('default-layout');
-        // Ensure grid layout styles are applied with higher priority
-        const projectInfos = document.querySelectorAll('.projet-info');
-        projectInfos.forEach(info => {
-            info.style.padding = '15px';
-            info.style.height = 'auto';
-            info.style.display = 'flex';
-            info.style.flexDirection = 'column';
-            info.style.justifyContent = 'center';
-            info.style.alignItems = 'center';
-            info.style.textAlign = 'center';
+        closePopupButton.addEventListener('click', () => {
+            projectDetailsPopup.classList.remove('show');
+            setTimeout(() => {
+                projectDetailsPopup.style.display = 'none';
+            }, 400);
         });
-        // Modify image dimensions for grid layout
-        const projectImages = document.querySelectorAll('.projet-img img');
-        projectImages.forEach(img => {
-            img.style.width = '100px';
-            img.style.height = '100px';
-        });
-    });
-
-    fullWidthButton.addEventListener('click', () => {
-        projectsContainer.classList.add('default-layout');
-        projectsContainer.classList.remove('grid-layout');
-        // Reset styles for full-width layout
-        const projectInfos = document.querySelectorAll('.projet-info');
-        projectInfos.forEach(info => {
-            info.style.padding = '';
-            info.style.height = '';
-            info.style.display = '';
-            info.style.flexDirection = '';
-            info.style.justifyContent = '';
-            info.style.alignItems = '';
-            info.style.textAlign = '';
-        });
-        // Reset image dimensions for full-width layout
-        const projectImages = document.querySelectorAll('.projet-img img');
-        projectImages.forEach(img => {
-            img.style.width = '';
-            img.style.height = '';
-        });
-    });
-});
-/* Preloader */
-window.addEventListener("load", function () {
-    setTimeout(function () {
-        document.body.classList.add("loaded");
-    }, 1500); // Délai de 1.5 seconde avant la disparition
-});
-
-
-const stack = document.querySelector(".stack");
-const cards = Array.from(stack.children)
-    .reverse()
-    .filter((child) => child.classList.contains("card"));
-
-cards.forEach((card) => stack.appendChild(card));
-
-function moveCard() {
-    const lastCard = stack.lastElementChild;
-    if (lastCard.classList.contains("card")) {
-        lastCard.classList.add("swap");
-
-        setTimeout(() => {
-            lastCard.classList.remove("swap");
-            stack.insertBefore(lastCard, stack.firstElementChild);
-        }, 1200);
     }
-}
 
-let autoplayInterval = setInterval(moveCard, 4000);
+    // Typing animation in presentation section
+    const typingEl = document.getElementById('typing-text');
+    if (typingEl) {
+        const phrases = ['Designer UX/UI', 'Chercheur UX', 'Prototypeur', 'Développeur Front', 'Étudiant Codux'];
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
 
-stack.addEventListener("click", function (e) {
-    const card = e.target.closest(".card");
-    if (card && card === stack.lastElementChild) {
-        card.classList.add("swap");
+        const type = () => {
+            const current = phrases[phraseIndex];
+            if (isDeleting) {
+                typingEl.textContent = current.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingEl.textContent = current.substring(0, charIndex + 1);
+                charIndex++;
+            }
 
-        setTimeout(() => {
-            card.classList.remove("swap");
-            stack.insertBefore(card, stack.firstElementChild);
-        }, 1200);
+            let delay = isDeleting ? 60 : 110;
+
+            if (!isDeleting && charIndex === current.length) {
+                delay = 1800;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+                delay = 300;
+            }
+
+            setTimeout(type, delay);
+        };
+
+        setTimeout(type, 800);
     }
+
+    // 3D tilt effect on glass cards (only on capable devices)
+    if (!isLowPerf) {
+        const glassCards = document.querySelectorAll(
+            '.fondsarriere, .competence-card, .presentation-box, .timeline-item .timeline-content'
+        );
+        glassCards.forEach(card => {
+            card.style.willChange = 'transform';
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const cx = rect.width / 2;
+                const cy = rect.height / 2;
+                const rotX = ((y - cy) / cy) * -6;
+                const rotY = ((x - cx) / cx) * 6;
+                card.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(4px)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
+        });
+    }
+
+    // Process steps highlight on hover
+    document.querySelectorAll('.process-step-v').forEach(step => {
+        step.addEventListener('mouseenter', () => step.classList.add('active-step'));
+        step.addEventListener('mouseleave', () => step.classList.remove('active-step'));
+    });
 });

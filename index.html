@@ -23,12 +23,10 @@
         <div class="moving-pattern"></div>
         <div class="luminous-effect"></div>
         <div class="gradient-bg">
-
-            <filter id='noiseFilterBg'>
-                <feTurbulence type='fractalNoise' baseFrequency='0.6' stitchTiles='stitch' />
-            </filter>
-
-            <rect width='100%' height='100%' preserveAspectRatio="xMidYMid meet" filter='url(#noiseFilterBg)' />
+            <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+                <filter id='noiseFilterBg'>
+                    <feTurbulence type='fractalNoise' baseFrequency='0.6' stitchTiles='stitch' />
+                </filter>
             </svg>
             <svg xmlns="http://www.w3.org/2000/svg" class="svgBlur">
                 <defs>
@@ -167,46 +165,83 @@
         <section id="presentation">
             <div class="presentation container">
                 <div class="presentation-box" data-aos="fade-up">
-                    <h1 class="section-titre">Présentation</h1>
-                    <h2 class="presentation-subtitle">Je suis Lilian Le Roux 👨‍💻</h2>
 
-                    <div class="presentation-content">
-                        <p>
-                            Étudiant en BUT Métiers du Multimédia et de l’Internet, je suis passionné par le
-                            <strong>webdesign</strong>, l’<strong>UI/UX</strong> et plus globalement par la conception
-                            d’expériences numériques à la fois esthétiques, accessibles et fonctionnelles.
-                        </p>
-                        <p>
-                            Mon parcours m’a permis de toucher à de nombreux domaines du numérique, mais c’est en
-                            découvrant la puissance de l’<strong>expérience utilisateur</strong> que j’ai trouvé ma
-                            voie. Ce qui me motive ? Créer des interfaces qui simplifient réellement la vie des
-                            utilisateurs, tout en étant inclusives et pensées pour tous les profils — y compris les
-                            publics éloignés du digital.
-                        </p>
-                        <p>
-                            J’ai pu concrétiser cette vision lors de projets comme la <strong>refonte du site de
-                                TV-Trégor</strong> ou la <strong>création d’une visite immersive pour ISblue</strong>,
-                            où j’ai développé une approche complète mêlant design, développement front-end,
-                            accessibilité et gestion de projet.
-                        </p>
-                        <p>
-                            Curieux et tourné vers l’avenir, je m’intéresse particulièrement aux <strong>technologies
-                                émergentes</strong>, notamment les <strong>IAs spécialisées</strong> qui transforment
-                            notre manière d’interagir avec le numérique. J’explore comment ces outils peuvent enrichir
-                            l’expérience utilisateur, automatiser intelligemment des parcours, ou encore personnaliser
-                            les interfaces à grande échelle.
-                        </p>
-                        <p>
-                            Sérieux, rigoureux et toujours à l’écoute des besoins terrain, je me spécialise aujourd’hui
-                            en UX/UI afin de perfectionner ma méthodologie et d’avoir un véritable impact dans la
-                            conception d’interfaces utiles, humaines et responsables.
-                        </p>
+                    <span class="intro-badge">Master 1 Codux · Co-design &amp; UX</span>
+
+                    <p class="presentation-name">Lilian Le Roux</p>
+
+                    <div class="typing-container">
+                        <span id="typing-text"></span>
+                        <span class="typing-cursor"></span>
                     </div>
 
-                    <div class="cta-wrapper">
-                        <a href="image/CV Le Roux Lilian (2).pdf" class="cta">Voir mon CV</a>
-                        <a href="#contact" class="cta">Me Contacter</a>
+                    <div class="skill-tags">
+                        <span class="skill-tag">UX Research</span>
+                        <span class="skill-tag">UI Design</span>
+                        <span class="skill-tag">Figma</span>
+                        <span class="skill-tag">Prototypage</span>
+                        <span class="skill-tag">Tests utilisateurs</span>
+                        <span class="skill-tag">Accessibilité</span>
+                        <span class="skill-tag">Design System</span>
+                        <span class="skill-tag">WordPress</span>
                     </div>
+
+                    <div class="presentation-split">
+                        <div class="presentation-text">
+                            <p>
+                                En <strong>Master 1 Codux (Co-design &amp; UX)</strong> après un BUT MMI, je conçois
+                                des expériences numériques centrées sur l’humain — accessibles, inclusives et engageantes.
+                            </p>
+                            <p>
+                                J’ai notamment repensé le site de <strong>TV-Trégor</strong> (WordPress, AJAX, audit UX)
+                                et co-conçu des solutions innovantes comme <strong>PassSenior</strong>, une app inclusive
+                                pour les seniors.
+                            </p>
+                            <p>
+                                Curieux des <strong>IA spécialisées</strong> et de leur impact sur le design,
+                                j’explore comment ces outils peuvent personnaliser et enrichir l’expérience utilisateur.
+                            </p>
+                            <div class="cta-wrapper">
+                                <a href="image/CV Le Roux Lilian (2).pdf" class="cta">Voir mon CV</a>
+                                <a href="#contact" class="cta-outline">Me Contacter</a>
+                            </div>
+                        </div>
+
+                        <div class="process-steps-vertical">
+                            <div class="process-step-v">
+                                <span class="process-icon">🔬</span>
+                                <div>
+                                    <h3>Découverte &amp; Recherche</h3>
+                                    <p>Interviews, benchmark, personas, parcours utilisateurs</p>
+                                </div>
+                            </div>
+                            <div class="process-connector"></div>
+                            <div class="process-step-v">
+                                <span class="process-icon">💡</span>
+                                <div>
+                                    <h3>Idéation &amp; Exploration</h3>
+                                    <p>Brainstorming, crazy 8, atelier co-design</p>
+                                </div>
+                            </div>
+                            <div class="process-connector"></div>
+                            <div class="process-step-v">
+                                <span class="process-icon">✏️</span>
+                                <div>
+                                    <h3>Design &amp; Prototypage</h3>
+                                    <p>Wireframes, maquettes Figma, design system</p>
+                                </div>
+                            </div>
+                            <div class="process-connector"></div>
+                            <div class="process-step-v">
+                                <span class="process-icon">🧪</span>
+                                <div>
+                                    <h3>Test &amp; Itération</h3>
+                                    <p>Tests utilisateurs, heuristiques, accessibilité</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
@@ -283,9 +318,9 @@
 
                     <div class="timeline-item">
                         <div class="timeline-content">
-                            <h2>2025–2026 – Objectif Master</h2>
-                            <p>Poursuite d’études en Master UI/UX pour approfondir la conception d’interfaces
-                                accessibles, humaines et engageantes.</p>
+                            <h2>2025–2026 – Master 1 Codux</h2>
+                            <p>Formation en <strong>Co-design &amp; UX</strong> (Codux) pour approfondir la recherche
+                                utilisateur, le prototypage et la conception d’interfaces accessibles et engageantes.</p>
                         </div>
                         <div class="dotted-line"></div>
                     </div>
@@ -1254,8 +1289,7 @@
                 </div>
         </section>
         <!-- End Contact Section -->
-        <div id="fullscreen-preview"><img src="" alt="preview"></div>
-    </main>
+        </main>
     <footer class="footer-basic">
         <div class="footer-content">
             <p class="copyright">
