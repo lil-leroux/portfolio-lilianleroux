@@ -1,22 +1,28 @@
 // Performance detection
-const isLowPerf = (navigator.deviceMemory && navigator.deviceMemory < 4) ||
+const prefersReducedMotionGlobal = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const isLowPerf = prefersReducedMotionGlobal ||
+    (navigator.deviceMemory && navigator.deviceMemory <= 6) ||
+    (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
+    (navigator.connection && navigator.connection.saveData) ||
     window.matchMedia('(max-width: 768px)').matches;
 
 if (isLowPerf) {
     document.documentElement.classList.add('low-performance');
     const interactive = document.querySelector('.interactive');
     if (interactive) interactive.style.display = 'none';
+} else {
+    document.documentElement.classList.add('enhanced-performance');
 }
 
 /* Preloader */
 window.addEventListener("load", function () {
     setTimeout(function () {
         document.body.classList.add("loaded");
-    }, 1500);
+    }, isLowPerf ? 400 : 1500);
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const prefersReducedMotion = prefersReducedMotionGlobal;
 
     // Reading progress indicator
     const progressBar = document.createElement('div');
@@ -29,9 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const progress = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
         progressBar.style.setProperty('--progress', `${Math.min(Math.max(progress, 0), 100)}%`);
     };
-    updateProgress();
-    window.addEventListener('scroll', updateProgress, { passive: true });
-    window.addEventListener('resize', updateProgress);
 
     // Floating back-to-top action
     const backToTop = document.createElement('button');
@@ -45,8 +48,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleBackToTop = () => {
         backToTop.classList.toggle('show', window.scrollY > 650);
     };
-    toggleBackToTop();
-    window.addEventListener('scroll', toggleBackToTop, { passive: true });
+    let scrollTicking = false;
+    const updateScrollUi = () => {
+        updateProgress();
+        toggleBackToTop();
+        scrollTicking = false;
+    };
+    const requestScrollUi = () => {
+        if (scrollTicking) return;
+        scrollTicking = true;
+        requestAnimationFrame(updateScrollUi);
+    };
+    updateScrollUi();
+    window.addEventListener('scroll', requestScrollUi, { passive: true });
+    window.addEventListener('resize', requestScrollUi);
     backToTop.addEventListener('click', () => {
         window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
     });
@@ -78,6 +93,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const move = () => {
+                if (document.hidden) {
+                    requestAnimationFrame(move);
+                    return;
+                }
                 curX += (tgX - curX) / 20;
                 curY += (tgY - curY) / 20;
                 interBubble.style.transform = `translate(${Math.round(curX)}px, ${Math.round(curY)}px)`;
@@ -221,6 +240,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const typingEl = document.getElementById('typing-text');
     if (typingEl) {
         const phrases = ['Designer UX/UI', 'Chercheur UX', 'Prototypeur', 'Développeur Front', 'Étudiant Codux'];
+        if (isLowPerf) {
+            typingEl.textContent = phrases[0];
+        } else {
         let phraseIndex = 0;
         let charIndex = 0;
         let isDeleting = false;
@@ -250,12 +272,16 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         setTimeout(type, 800);
+        }
     }
 
     // Typing animation in accueil section
     const accueilTypingEl = document.getElementById('accueil-typing-text');
     if (accueilTypingEl) {
         const aPhases = ['Designer UX/UI', 'Chercheur UX', 'Prototypeur', 'Développeur Front'];
+        if (isLowPerf) {
+            accueilTypingEl.textContent = aPhases[0];
+        } else {
         let aIdx = 0, aChr = 0, aDel = false;
         const typeAccueil = () => {
             const cur = aPhases[aIdx];
@@ -267,6 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(typeAccueil, delay);
         };
         setTimeout(typeAccueil, 3500);
+        }
     }
 
     const iconSvgs = {
@@ -465,19 +492,57 @@ document.addEventListener('DOMContentLoaded', () => {
         const glassCards = document.querySelectorAll(
             '.fondsarriere, .competence-card, .presentation-box, .timeline-item .timeline-content, #projets .projet-item, .logiciels-section'
         );
+        const visibleTiltCards = new WeakSet();
+
+        if ('IntersectionObserver' in window) {
+            const tiltObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    entry.target.classList.toggle('can-tilt', entry.isIntersecting);
+                    if (entry.isIntersecting) visibleTiltCards.add(entry.target);
+                });
+            }, { rootMargin: '140px' });
+            glassCards.forEach(card => tiltObserver.observe(card));
+        } else {
+            glassCards.forEach(card => {
+                card.classList.add('can-tilt');
+                visibleTiltCards.add(card);
+            });
+        }
+
         glassCards.forEach(card => {
-            card.style.willChange = 'transform';
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
+            let rect = null;
+            let rafId = null;
+            let pointerX = 0;
+            let pointerY = 0;
+
+            const applyTilt = () => {
+                rafId = null;
+                if (!rect || !card.classList.contains('can-tilt') || !visibleTiltCards.has(card)) return;
+                const x = pointerX - rect.left;
+                const y = pointerY - rect.top;
                 const cx = rect.width / 2;
                 const cy = rect.height / 2;
-                const rotX = ((y - cy) / cy) * -6;
-                const rotY = ((x - cx) / cx) * 6;
-                card.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(4px)`;
+                const rotX = ((y - cy) / cy) * -4.5;
+                const rotY = ((x - cx) / cx) * 4.5;
+                card.style.transform = `perspective(1000px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) translateZ(3px)`;
+            };
+
+            card.addEventListener('pointerenter', () => {
+                rect = card.getBoundingClientRect();
+                card.style.willChange = 'transform';
             });
-            card.addEventListener('mouseleave', () => {
+
+            card.addEventListener('pointermove', (e) => {
+                pointerX = e.clientX;
+                pointerY = e.clientY;
+                if (!rafId) rafId = requestAnimationFrame(applyTilt);
+            });
+
+            card.addEventListener('pointerleave', () => {
+                if (rafId) cancelAnimationFrame(rafId);
+                rafId = null;
+                rect = null;
+                card.style.willChange = 'auto';
                 card.style.transform = '';
             });
         });

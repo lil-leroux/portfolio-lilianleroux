@@ -2548,23 +2548,46 @@ html:not(html:hover) .cursor::after {
 /* ===== Scrollbar CSS ===== */
 /* Firefox */
 * {
-	scrollbar-width: auto;
-	scrollbar-color: #6d70a6 #ffffff;
+	scrollbar-width: thin;
+	scrollbar-color: rgba(167, 139, 250, 0.78) transparent;
 }
 
 /* Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
-	width: 10px;
+	width: 12px;
+	height: 12px;
 }
 
 *::-webkit-scrollbar-track {
-	background: #ffffff;
+	background: transparent;
+	border-radius: 999px;
+	box-shadow: none;
 }
 
 *::-webkit-scrollbar-thumb {
-	background-color: #6d70a6;
-	border-radius: 8px;
-	border: 1px inset #102540;
+	background:
+		linear-gradient(180deg, rgba(255, 255, 255, 0.075), transparent 24%),
+		linear-gradient(135deg, rgba(251, 191, 119, 0.9), rgba(142, 55, 215, 0.86), rgba(107, 141, 214, 0.9));
+	border-radius: 999px;
+	border: 3px solid rgba(7, 23, 43, 0.36);
+	box-shadow:
+		0 0 16px rgba(107, 141, 214, 0.205),
+		inset 0 1px 0 rgba(255, 255, 255, 0.5),
+		inset 0 -8px 16px rgba(7, 23, 43, 0.18);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+	background:
+		linear-gradient(180deg, rgba(255, 255, 255, 0.55), transparent 24%),
+		linear-gradient(135deg, rgba(251, 191, 119, 1), rgba(142, 55, 215, 0.95), rgba(125, 211, 252, 1));
+	box-shadow:
+		0 0 22px rgba(125, 211, 252, 0.56),
+		inset 0 1px 0 rgba(255, 255, 255, 0.58),
+		inset 0 -8px 16px rgba(7, 23, 43, 0.16);
+}
+
+*::-webkit-scrollbar-corner {
+	background: transparent;
 }
 
 
@@ -4318,6 +4341,75 @@ main.project .btn-next-project:first-child img {
 .competence-card::before,
 #contact .contact-item::before {
 	opacity: 0.42 !important;
+}
+
+/* Performance mode: lighter rendering for modest devices */
+.low-performance *,
+.low-performance *::before,
+.low-performance *::after {
+	animation-duration: 0.001ms !important;
+	animation-iteration-count: 1 !important;
+	scroll-behavior: auto !important;
+}
+
+.low-performance .moving-pattern,
+.low-performance .luminous-effect,
+.low-performance .gradient-bg,
+.low-performance .gradients-container,
+.low-performance .interactive,
+.low-performance .cursor {
+	display: none !important;
+}
+
+.low-performance .background {
+	background:
+		radial-gradient(circle at 28% 24%, rgba(83, 121, 255, 0.28), transparent 34%),
+		radial-gradient(circle at 70% 68%, rgba(76, 202, 220, 0.18), transparent 36%),
+		#07182e !important;
+}
+
+.low-performance #projets .projet-item {
+	content-visibility: auto;
+	contain-intrinsic-size: 430px;
+}
+
+.low-performance .fondsarriere,
+.low-performance .fondsarrierepresentation,
+.low-performance .presentation-box,
+.low-performance #competence .competence-top,
+.low-performance .competence-card,
+.low-performance .competence-focus-panel,
+.low-performance .logiciels-section,
+.low-performance #contact .contact-item,
+.low-performance #contact .contact-form-panel,
+.low-performance .timeline-item .timeline-content,
+.low-performance .parcours-interactive,
+.low-performance #projets .projet-item,
+.low-performance #projets .projet-info,
+.low-performance .popup-inner {
+	backdrop-filter: none !important;
+	-webkit-backdrop-filter: none !important;
+	background: rgba(9, 24, 46, 0.58) !important;
+	box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22) !important;
+}
+
+.low-performance .competence-card,
+.low-performance .presentation-box,
+.low-performance .timeline-item .timeline-content,
+.low-performance #projets .projet-item,
+.low-performance .logiciels-section,
+.low-performance .fondsarriere {
+	transform: none !important;
+	will-change: auto !important;
+}
+
+.low-performance .project-images-wrapper {
+	animation: none !important;
+	background-size: 100% 100% !important;
+}
+
+.low-performance .scroll-progress {
+	transition: none !important;
 }
 
 @media only screen and (max-width: 767px) {

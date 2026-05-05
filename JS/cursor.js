@@ -1,5 +1,11 @@
 document.querySelectorAll('.cursor').forEach(cursor => {
-  if (navigator.deviceMemory && navigator.deviceMemory < 4 || window.matchMedia("(max-width: 768px)").matches) {
+  const isLowPerfCursor = window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+    (navigator.deviceMemory && navigator.deviceMemory <= 6) ||
+    (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
+    (navigator.connection && navigator.connection.saveData) ||
+    window.matchMedia("(max-width: 768px)").matches;
+
+  if (isLowPerfCursor) {
     cursor.style.display = 'none';
     return;
   }
@@ -64,9 +70,20 @@ document.querySelectorAll('.cursor').forEach(cursor => {
     }
   };
 
+  let mouseX = 0;
+  let mouseY = 0;
+  let cursorTicking = false;
+
   document.addEventListener('mousemove', e => {
-    update(e.clientX, e.clientY);
-  });
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    if (cursorTicking) return;
+    cursorTicking = true;
+    requestAnimationFrame(() => {
+      update(mouseX, mouseY);
+      cursorTicking = false;
+    });
+  }, { passive: true });
 
   const setHover = (elem) => {
     if (!elem || elem === hoverElem) return;
