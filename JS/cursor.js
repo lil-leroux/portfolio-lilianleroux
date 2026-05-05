@@ -5,6 +5,45 @@ document.querySelectorAll('.cursor').forEach(cursor => {
   }
 
   let hoverElem = null;
+  let hoverRect = null;
+
+  const prioritySelector = [
+    '.competence-card',
+    '.contact-item',
+    '.timeline-content',
+    '.fondsarriere',
+    '.timeline-control',
+    '.filter-button',
+    'button',
+    'a',
+    '.mousey'
+  ].join(', ');
+
+  const excludedSelector = [
+    '#projets .projet-item',
+    '#contact .contact-form-panel',
+    '.logiciels-section',
+    '.parcours-interactive',
+    '#presentation .presentation-box',
+    '#presentation .fondsarrierepresentation'
+  ].join(', ');
+
+  const resolveHoverElement = (target) => {
+    if (!target || !target.closest) return null;
+    if (target.closest(excludedSelector)) return null;
+
+    for (const selector of [
+      '.competence-card',
+      '.contact-item',
+      '.timeline-content',
+      '.fondsarriere'
+    ]) {
+      const parent = target.closest(selector);
+      if (parent) return parent;
+    }
+
+    return target.closest(prioritySelector);
+  };
 
   const update = (x, y) => {
     cursor.style.setProperty('--x', `${x}px`);
@@ -13,9 +52,9 @@ document.querySelectorAll('.cursor').forEach(cursor => {
 
     if (hoverElem) {
       const cs = window.getComputedStyle(hoverElem);
-      const r = hoverElem.getBoundingClientRect();
-      cursor.style.setProperty('--width', `${Math.min(r.width + 14, 180)}px`);
-      cursor.style.setProperty('--height', `${Math.min(r.height + 14, 72)}px`);
+      const r = hoverRect || hoverElem.getBoundingClientRect();
+      cursor.style.setProperty('--width', `${Math.min(r.width + 18, window.innerWidth - 24)}px`);
+      cursor.style.setProperty('--height', `${Math.min(r.height + 18, window.innerHeight - 24)}px`);
       cursor.style.setProperty('--radius', cs.borderRadius || cs.borderTopLeftRadius || '10px');
     } else {
       cursor.style.setProperty('--width', '40px');
@@ -28,19 +67,53 @@ document.querySelectorAll('.cursor').forEach(cursor => {
     update(e.clientX, e.clientY);
   });
 
-  const interactiveSelector = 'a, button, .mousey, .contact-item, .projet-item, .filter-button, .timeline-content, .timeline-control, .competence-card, .logiciels-logos img';
+  const setHover = (elem) => {
+    if (!elem || elem === hoverElem) return;
+    hoverElem = elem;
+    const previousTransform = elem.style.transform;
+    elem.style.transform = '';
+    hoverRect = elem.getBoundingClientRect();
+    elem.style.transform = previousTransform;
+  };
 
-  document.querySelectorAll(interactiveSelector).forEach(elem => {
-    elem.addEventListener('mouseenter', () => { hoverElem = elem; });
-    elem.addEventListener('mouseleave', () => { hoverElem = null; });
+  const clearHover = () => {
+    hoverElem = null;
+    hoverRect = null;
+  };
+
+  document.querySelectorAll(prioritySelector).forEach(elem => {
+    elem.addEventListener('mouseenter', () => { setHover(elem); });
+    elem.addEventListener('mouseleave', clearHover);
   });
 
   document.addEventListener('mouseover', e => {
-    const target = e.target.closest(interactiveSelector);
-    if (target) hoverElem = target;
+    const target = resolveHoverElement(e.target);
+    if (target) {
+      setHover(target);
+    } else if (e.target.closest && e.target.closest(excludedSelector)) {
+      clearHover();
+    }
   });
 
   document.addEventListener('mouseout', e => {
-    if (hoverElem && !hoverElem.contains(e.relatedTarget)) hoverElem = null;
+    if (hoverElem && !hoverElem.contains(e.relatedTarget)) clearHover();
+  });
+
+  window.addEventListener('scroll', () => {
+    if (hoverElem) {
+      const previousTransform = hoverElem.style.transform;
+      hoverElem.style.transform = '';
+      hoverRect = hoverElem.getBoundingClientRect();
+      hoverElem.style.transform = previousTransform;
+    }
+  }, { passive: true });
+
+  window.addEventListener('resize', () => {
+    if (hoverElem) {
+      const previousTransform = hoverElem.style.transform;
+      hoverElem.style.transform = '';
+      hoverRect = hoverElem.getBoundingClientRect();
+      hoverElem.style.transform = previousTransform;
+    }
   });
 });
