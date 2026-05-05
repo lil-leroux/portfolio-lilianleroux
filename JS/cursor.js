@@ -11,7 +11,7 @@ document.querySelectorAll('.cursor').forEach(cursor => {
     '.competence-card',
     '.contact-item',
     '.timeline-content',
-    '.fondsarriere',
+    //'.fondsarriere',
     '.timeline-control',
     '.filter-button',
     'button',
@@ -20,6 +20,7 @@ document.querySelectorAll('.cursor').forEach(cursor => {
   ].join(', ');
 
   const excludedSelector = [
+    '.fondsarriere',
     '#projets .projet-item',
     '#contact .contact-form-panel',
     '.logiciels-section',
@@ -36,7 +37,7 @@ document.querySelectorAll('.cursor').forEach(cursor => {
       '.competence-card',
       '.contact-item',
       '.timeline-content',
-      '.fondsarriere'
+      //'.fondsarriere'
     ]) {
       const parent = target.closest(selector);
       if (parent) return parent;
